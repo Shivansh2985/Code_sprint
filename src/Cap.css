@@ -1,0 +1,352 @@
+:root{
+  --glass-border: rgba(255,255,255,0.12);
+  --accent: #f59e0b;
+  --green-start: #22c55e;
+  --green-end: #16a34a;
+  --text: #eef2ff;
+  --muted: rgba(235,235,245,0.75);
+}
+
+
+/* Purple rounded card like the screenshot */
+.guidelines-wrap { display:flex; align-items:center; justify-content:center; padding:1.5rem; }
+.guidelines-card{
+  width: min(680px, 92vw);
+  max-width: 720px;
+  border-radius: 22px;
+  padding: 34px 34px;
+  background: linear-gradient(180deg, #2e1447 0%, #4d2273 45%, #6b36a0 100%);
+  box-shadow: 0 26px 60px rgba(12,6,30,0.6), inset 0 1px 0 rgba(255,255,255,0.03);
+  color: #eef2ff;
+  border: 1px solid rgba(255,255,255,0.06);
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.45;
+}
+
+/* headings */
+.card-head { margin-bottom: 8px; }
+.card-title { margin: 0 0 6px 0; font-size: clamp(20px, 2.8vw, 28px); font-weight: 800; color: #fff; }
+.card-subtitle { color: rgba(235,235,245,0.82); font-size: 0.95rem; margin-bottom: 14px; }
+
+/* section heading */
+.section-heading { display:flex; gap:12px; align-items:center; margin-bottom:8px; }
+.section-heading.small { margin-top:12px; margin-bottom:8px; }
+.section-heading .icon { font-size: 20px; display:inline-flex; align-items:center; justify-content:center; width:30px; height:30px; border-radius:6px; background: rgba(255,255,255,0.04); }
+.section-heading h3 { margin:0; font-size:1.02rem; color:#fff; font-weight:700; }
+
+/* guidelines list */
+.guidelines-list { list-style:none; padding: 0; margin: 6px 0 12px 0; }
+.guidelines-list li {
+  display:flex; align-items:flex-start; gap:12px; margin: 9px 0;
+  color: rgba(235,235,245,0.95); font-size:0.98rem;
+}
+.guidelines-list li input[type="checkbox"]{
+  width:18px; height:18px; margin-top:3px;
+  border-radius:3px; background:transparent;
+  accent-color: #dbeafe; /* fallback */
+  cursor:pointer;
+  border: 2px solid rgba(255,255,255,0.12);
+}
+
+/* label text */
+.guidelines-list li label { cursor:pointer; color: rgba(235,235,245,0.94); }
+
+/* Next step / paragraphs */
+.next-text p { color: rgba(235,235,245,0.88); font-size:0.95rem; margin:8px 0; }
+.next-text .wish { color: rgba(240,240,250,0.95); font-weight:600; font-size:0.95rem; }
+
+/* signature */
+.signature { margin-top: 10px; color: rgba(235,235,245,0.85); font-size:0.9rem; }
+
+/* actions (pills) */
+.card-actions { display:flex; gap:14px; justify-content:flex-end; margin-top:20px; }
+.btn-cancel{
+  background: rgba(255,255,255,0.12);
+  color: #2b2530;
+  padding: 12px 24px;
+  border-radius: 999px;
+  border:none;
+  font-weight:700;
+  box-shadow: 0 8px 20px rgba(14,10,24,0.36), inset 0 1px rgba(255,255,255,0.02);
+}
+.btn-go{
+  background: linear-gradient(90deg,#16a34a,#22c55e);
+  color: #072014;
+  padding: 12px 24px;
+  border-radius: 999px;
+  border:none;
+  font-weight:800;
+  box-shadow: 0 12px 36px rgba(34,197,94,0.14);
+}
+
+/* disabled state */
+.btn-go.disabled, .btn-go[aria-disabled="true"] { opacity: 0.6; pointer-events: none; filter: grayscale(0.05); }
+
+/* responsive */
+@media (max-width: 640px){
+  .guidelines-card { padding: 20px; border-radius: 16px; }
+  .card-actions { flex-direction: column-reverse; }
+  .btn-cancel, .btn-go { width:100%; }
+}
+
+/* reset */
+* { box-sizing: border-box; }
+html,body,#root { height:100%; margin:0; }
+.app-root { position:relative; width:100vw; height:100vh; overflow:hidden; font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto; color:var(--text); }
+
+/* background */
+.bg-img {
+  position:absolute; inset:0; width:100%; height:100%;
+  user-select:none; z-index:0; opacity:0; transform-origin:center;
+}
+
+/* backdrop */
+.backdrop { position:absolute; inset:0; pointer-events:none; background:linear-gradient(180deg, rgba(7,10,23,0.08), rgba(5,7,17,0.28)); transition:all 300ms; opacity:0; z-index:5; }
+.backdrop.visible { opacity:1; background:linear-gradient(180deg, rgba(6,8,23,0.26), rgba(2,6,20,0.55)); backdrop-filter: blur(2px) saturate(120%); pointer-events:auto; }
+
+/* ---------------- Cinematic Loader ---------------- */
+.cinematic-loader { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:linear-gradient(180deg,#04060a 0%, #070912 100%); z-index:1000; color:#fff; overflow:hidden; }
+
+.letterbox { position:absolute; left:0; right:0; height:14%; background:linear-gradient(180deg, rgba(0,0,0,0.96), rgba(0,0,0,0.85)); z-index:1010; transform-origin:center; }
+.letterbox.top{ top:0; transform: translateY(-6%); animation:letter-fade 1600ms forwards; }
+.letterbox.bottom{ bottom:0; transform: translateY(6%); animation:letter-fade 1600ms forwards; }
+@keyframes letter-fade { to { transform: translateY(0); } }
+
+.loader-center { position:relative; z-index:1020; display:flex; flex-direction:column; align-items:center; gap:18px; text-align:center; padding:12px; width:min(820px,88vw); pointer-events:none; }
+.loader-logo { display:flex; flex-direction:column; gap:6px; transform:translateY(-6px) scale(0.98); animation:logo-pop 700ms 250ms forwards; opacity:0; }
+.logo-title { font-size:clamp(28px,4.2vw,44px); font-weight:800; letter-spacing:-0.02em; text-transform:uppercase; color:#fff; }
+.logo-sub { font-size:0.9rem; color:rgba(255,255,255,0.7); }
+@keyframes logo-pop { to { transform:translateY(0) scale(1); opacity:1; } }
+
+.shine { position:absolute; top:calc(50% - 22px); left:-30%; width:60%; height:44px; transform:skewX(-18deg); background:linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.12) 50%, rgba(255,255,255,0) 100%); filter:blur(20px); animation:sweep 1.2s ease-in-out 350ms; z-index:1015; pointer-events:none; }
+@keyframes sweep { from{ left:-60%; opacity:0 } 30%{ opacity:1 } to{ left:120%; opacity:0 } }
+
+.cinematic-scan { position:absolute; left:-10%; width:120%; height:1.6px; background:linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent); animation:scan 4s linear infinite; top:calc(50% + 60px); z-index:1011; opacity:0.9; }
+@keyframes scan { from{ transform:translateY(-40vh) } to{ transform:translateY(40vh) } }
+
+.loader-caption { font-size:0.95rem; color:rgba(255,255,255,0.75); letter-spacing:0.02em; opacity:0; animation:caption-in 750ms 700ms forwards; }
+@keyframes caption-in { to { opacity:1; transform:translateY(0) } }
+
+.grain { position:absolute; inset:0; background-image: linear-gradient(transparent 50%, rgba(255,255,255,0.02) 51%), linear-gradient(90deg, rgba(0,0,0,0.02), rgba(255,255,255,0.01)); mix-blend-mode:overlay; opacity:0.18; z-index:1030; pointer-events:none; animation:grainy 3s steps(10) infinite; }
+@keyframes grainy { to { background-position: 100% 100% } }
+
+/* ---------------- Modals / glass ---------------- */
+.modal-wrap { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:40; padding:1.5rem; pointer-events:auto; }
+.modal { width:min(720px,92vw); max-width:720px; max-height:86vh; overflow-y:auto; border-radius:16px; padding:1.5rem 1.6rem; box-shadow:0 10px 30px rgba(3,7,18,0.6), 0 2px 8px rgba(3,7,18,0.45); transition:transform 240ms, opacity 220ms; }
+.glass { background:linear-gradient(135deg, rgba(18,24,50,0.55), rgba(12,18,40,0.45)); border:1px solid var(--glass-border); color:var(--text); backdrop-filter:blur(12px) saturate(130%); }
+
+/* headings */
+.title { margin:0 0 6px 0; font-size:1.5rem; font-weight:700; color:#fff; }
+.subtitle { margin:0 0 0.75rem 0; color:var(--muted); font-size:0.95rem; }
+
+/* rich guidelines content */
+.guidelines-rich { color: #f8fafc; font-size:0.98rem; line-height:1.5; margin-bottom:0.75rem; }
+.guidelines-rich p { margin:0.45rem 0; }
+
+/* checkboxes */
+.checkboxes { display:flex; flex-direction:column; gap:10px; margin-top:0.6rem; }
+.fancy-check { display:flex; gap:0.9rem; align-items:flex-start; cursor:pointer; user-select:none; position:relative; padding-right:10px; }
+.fancy-check input { display:none; }
+.fancy-check .box { width:22px; height:22px; border-radius:6px; border:1.6px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.02); position:relative; transition:all 180ms ease; display:inline-block; }
+.fancy-check .label { color:rgba(235,235,245,0.95); font-size:0.95rem; line-height:1.3; }
+
+/* when checked: animate tick & background */
+.fancy-check.checked .box {
+  background: linear-gradient(90deg, var(--green-start), var(--green-end));
+  border-color: rgba(255,255,255,0.06);
+  transform: scale(1.02);
+  box-shadow: 0 6px 18px rgba(34,197,94,0.12);
+}
+.fancy-check .box::after {
+  content: "";
+  position:absolute; left:6px; top:2px; width:6px; height:11px; border-right:2px solid transparent; border-bottom:2px solid transparent; transform:rotate(45deg) scale(0.6); opacity:0;
+  transition:all 220ms cubic-bezier(.2,.9,.2,1);
+}
+.fancy-check.checked .box::after {
+  border-right:2.6px solid #05220f;
+  border-bottom:2.6px solid #05220f;
+  transform: rotate(45deg) scale(1);
+  opacity:1;
+}
+
+/* modal actions & buttons */
+.modal-actions { display:flex; gap:0.9rem; justify-content:flex-end; margin-top:0.9rem; }
+.modal-actions.single { justify-content:center; }
+.btn { border:none; padding:0.6rem 1rem; border-radius:999px; font-weight:700; letter-spacing:0.03em; cursor:pointer; font-size:0.95rem; transition:transform 120ms, box-shadow 120ms; }
+.btn-primary { background:linear-gradient(90deg, var(--green-start), var(--green-end)); color:#072014; box-shadow:0 10px 30px rgba(16,185,129,0.16); border:1px solid rgba(255,255,255,0.06); position:relative; overflow:visible; }
+.btn-outline { background:transparent; border:1px solid rgba(255,255,255,0.08); color:var(--muted); }
+
+/* disabled look */
+.btn.disabled, .btn[aria-disabled="true"] { opacity:0.6; cursor:not-allowed; filter:grayscale(0.1); }
+
+/* ---------------- Fancy animated border effect (for both Go & Submit) ----------------
+   We create a pseudo-element that contains a moving gradient which looks like a running border line.
+*/
+.fancy-border{
+  --pad: 2px;
+  position: relative;            /* required for pseudo-elements */
+  display: inline-block;
+  padding: calc(0.6rem - var(--pad)) calc(1rem - var(--pad));
+  border-radius: 999px;
+  background: #462f8b;           /* your inner background / content bg */
+  color: white;
+  z-index: 0;
+  overflow: visible;
+}
+
+/* subtle static overlay (like your original ::before) */
+.fancy-border::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  padding:var(--pad);
+  pointer-events:none;
+  background: linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+  /* mask out the center so only the border strip remains */
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: 0;
+}
+
+/* animated border strip — NO rotation of whole bg */
+.fancy-border::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:inherit;
+  padding:var(--pad);
+  pointer-events:none;
+  /* a narrow bright band that will slide along the border */
+  background: linear-gradient(90deg,
+      rgba(255,255,255,0) 0%,
+      rgba(255,255,255,0.6) 45%,
+      rgba(255,255,255,0.8) 50%,
+      rgba(255,255,255,0.6) 55%,
+      rgba(255,255,255,0) 100%);
+  background-size: 300% 100%;    /* wide so movement is visible */
+  background-repeat: no-repeat;
+  /* keep only the border visible by masking out the center */
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: -1;                   /* behind the element but above page bg */
+  filter: blur(6px);             /* soft glow on the strip */
+  animation: slide-border 2.6s linear infinite;
+  opacity: 0.95;
+}
+
+/* when disabled, make it subtle */
+.fancy-border.disabled::after{
+  opacity: 0.18;
+  animation: none;
+  filter: blur(4px);
+}
+
+@keyframes slide-border {
+  /* Move the bright band FROM left → right → left giving "around" feel.
+     Adjust percentages to tweak motion. */
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+/* hover/active micro interactions */
+.btn-primary:hover { transform: translateY(-2px); box-shadow:0 16px 38px rgba(16,185,129,0.18); }
+.btn-primary:active { transform: translateY(0); }
+
+/* close X */
+.close-x { position:absolute; top:12px; right:14px; background:transparent; border:none; color:rgba(240,240,250,0.9); font-size:1.6rem; cursor:pointer; padding:0; }
+
+/* form */
+.form { display:flex; flex-direction:column; gap:0.9rem; margin-top:0.45rem; }
+.label { display:flex; flex-direction:column; gap:0.35rem; font-size:0.95rem; color:var(--muted); }
+.input { padding:0.6rem 0.85rem; border-radius:999px; border:1px solid rgba(255,255,255,0.06); background:rgba(6,10,25,0.48); color:#fff; outline:none; font-size:0.95rem; transition:box-shadow 120ms, border-color 120ms; }
+.input::placeholder { color:rgba(210,210,220,0.55); }
+.input:focus { box-shadow:0 6px 20px rgba(35,120,125,0.08); border-color:rgba(255,255,255,0.14); background:rgba(8,12,28,0.66); }
+
+/* responsive */
+@media (max-width:640px) {
+  .modal { padding:1.25rem; border-radius:12px; width:94vw; }
+  .title { font-size:1.25rem; }
+  .modal-actions { gap:0.6rem; flex-direction:column-reverse; align-items:stretch; }
+  .btn { width:100%; }
+  .logo-title { font-size:clamp(22px,7vw,28px); }
+}
+
+/* --- z-index / pointer fixes --- */
+.cinematic-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 2000; /* high while visible */
+  pointer-events: auto; /* initially should capture pointer while showing */
+}
+
+/* when cinematic loader is hidden by JS we set pointerEvents = none inline.
+   but keep a fallback rule */
+.cinematic-loader[style*="opacity: 0"],
+.cinematic-loader.hidden {
+  pointer-events: none;
+}
+
+/* backdrop sits under modal */
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 1500;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+.backdrop.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* modal should be top-most */
+.modal-wrap {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 3000; /* above loader/backdrop */
+  pointer-events: none; /* allow children to receive events only */
+}
+.modal-wrap .modal {
+  pointer-events: auto;
+}
+
+/* ensure inputs are clickable even if some spans overlay them */
+.fancy-check input {
+  position: relative;
+  z-index: 2;
+  cursor: pointer;
+}
+
+/* .box (visual) should not block pointer events */
+.fancy-check .box {
+  pointer-events: none;
+}
+
+/* background image */
+.bg-img {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* small helpers */
+.btn.disabled,
+.btn[aria-disabled="true"] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+}
