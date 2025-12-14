@@ -3,7 +3,7 @@ import "./Cap.css";
 import { gsap } from "gsap";
 import bgImgPath from "../public/BG.jpg";
 import load from "../public/loader.png";
-import vid from "../public/vdo.mp4";
+import vid from "../public/vido.mp4";
 
 const CONTEST_URL =
   "https://www.hackerearth.com/challenges/college/code-sprint-30/";
