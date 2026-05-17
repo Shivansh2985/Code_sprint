@@ -1,17 +1,24 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./Cap.css";
 import { gsap } from "gsap";
-import bgImgPath from "../public/BG.jpg";
-import load from "../public/loader.png";
-import vid from "../public/vido.mp4";
+import Loader from "./Loader";
+
+const bgImgPath = "/BG.png";
 
 const CONTEST_URL =
   "https://www.hackerearth.com/challenges/college/code-sprint-30/";
 
 const App = () => {
-  const [isLoading, setIsLoading] = useState(true);
   const [bgLoaded, setBgLoaded] = useState(false);
-  const [minLoaderDone, setMinLoaderDone] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
+
+  useEffect(() => {
+    const hasSeenLoader = sessionStorage.getItem('hasSeenLoader');
+    if (!hasSeenLoader) {
+      setShowLoader(true);
+      sessionStorage.setItem('hasSeenLoader', 'true');
+    }
+  }, []);
 
   // UI states
   const [username, setUsername] = useState("");
@@ -29,33 +36,22 @@ const App = () => {
   const cinematicRef = useRef(null);
   const revealTlRef = useRef(null);
   const motionTlRef = useRef(null);
-  const minLoaderTimerRef = useRef(null);
   const showGuidelinesTimerRef = useRef(null);
-
-  const MIN_LOADER_MS = 8300;
-
-
-  useEffect(() => {
-    minLoaderTimerRef.current = setTimeout(() => setMinLoaderDone(true), MIN_LOADER_MS);
-    return () => {
-      clearTimeout(minLoaderTimerRef.current);
-    };
-  }, []);
 
   // image onLoad handler -> set initial state then mark loaded
   const handleBgLoad = () => {
-    // ensure initial hidden / shifted state BEFORE playing reveal
+    // ensure initial hidden state BEFORE playing reveal (starting oversized)
     if (bgRef.current) {
-      gsap.set(bgRef.current, { opacity: 0, scale: 1.06, x: -10 });
+      gsap.set(bgRef.current, { opacity: 0, scale: 1.3, x: 0 });
     }
     setBgLoaded(true);
   };
 
-   const validTokens = ['281234', '981536', '631732', '581294', '687891'];
-  const isValid = username === 'Shivam_07' && validTokens.includes(token);
-  // when both bg loaded and min loader done -> play reveal (one-time) and start infinite motion
+   const validTokens = ['287845','459083'];
+  const isValid = (username === 'Jatin_18' || username === 'Aditya_rcb' )&& validTokens.includes(token);
+  // when bg loaded -> play reveal (one-time) and start infinite motion
   useEffect(() => {
-    if (!(bgLoaded && minLoaderDone)) return;
+    if (!bgLoaded || showLoader) return;
 
     // cleanup previous timelines if any
     if (revealTlRef.current) {
@@ -71,18 +67,6 @@ const App = () => {
     const revealTl = gsap.timeline({ defaults: { ease: "power3.out" } });
     revealTlRef.current = revealTl;
 
-    // fade out cinematic loader (make sure it won't block pointer-events)
-    if (cinematicRef.current) {
-      revealTl.to(cinematicRef.current, {
-        opacity: 0,
-        duration: 0.35,
-        onComplete: () => {
-          // remove pointer-events so it stops blocking clicks
-          cinematicRef.current.style.pointerEvents = "none";
-        },
-      });
-    }
-
     // reveal background image
     if (bgRef.current) {
       revealTl.to(
@@ -94,25 +78,28 @@ const App = () => {
 
     // when reveal completes:
     revealTl.call(() => {
-      setIsLoading(false);
-
       // show guidelines after a short delay (adjust ms if needed)
       showGuidelinesTimerRef.current = setTimeout(() => {
         setShowGuidelines(true);
-      }, 600); // 600ms after reveal end
+      }, 7000); // 7000ms (7s) after reveal end
     });
 
-    // start continuous slow motion separately (so reveal timeline completes)
+    // We no longer animate the background motion, to keep it perfectly fit
     revealTl.then(() => {
+      // Continuous "Breathing" background loop
       if (bgRef.current) {
-        motionTlRef.current = gsap.to(bgRef.current, {
-          duration: 14,
-          scale: 1.06,
-          x: -40,
-          yoyo: true,
-          repeat: -1,
-          ease: "none",
-        });
+        motionTlRef.current = gsap.timeline({ repeat: -1 });
+        motionTlRef.current
+          .to(bgRef.current, {
+            scale: 0.96, // shrink inwards
+            duration: 5,
+            ease: "sine.inOut"
+          })
+          .to(bgRef.current, {
+            scale: 1.04, // expand outwards
+            duration: 5,
+            ease: "sine.inOut"
+          });
       }
     });
 
@@ -127,7 +114,7 @@ const App = () => {
       }
       clearTimeout(showGuidelinesTimerRef.current);
     };
-  }, [bgLoaded, minLoaderDone]);
+  }, [bgLoaded, showLoader]);
 
   // animate floating Go button and submit button when guidelines/login visible
   useEffect(() => {
@@ -185,7 +172,7 @@ const App = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (username === "Shivam_07" && (token === "281234" || token === "981536" || token === "631732" || token === "581294" || token === "687891")) {
+    if (isValid) {
       window.open(CONTEST_URL, "_blank", "noopener,noreferrer");
     } else {
       if (submitBtnRef.current) {
@@ -202,7 +189,6 @@ const App = () => {
   // cleanup timers on unmount
   useEffect(() => {
     return () => {
-      clearTimeout(minLoaderTimerRef.current);
       clearTimeout(showGuidelinesTimerRef.current);
       if (revealTlRef.current) revealTlRef.current.kill();
       if (motionTlRef.current) motionTlRef.current.kill();
@@ -211,13 +197,7 @@ const App = () => {
 
   return (
     <div className="app-root">
-      {/* Cinematic Loader */}
-      {isLoading && (
-        <div className="cinematic-loader" ref={cinematicRef}>
-          <video src={vid} autoPlay muted></video>
-        </div>
-      )}
-
+      {showLoader && <Loader onComplete={() => setShowLoader(false)} />}
       {/* Background image */}
       <img
         ref={bgRef}
@@ -238,11 +218,11 @@ const App = () => {
             <div className="guidelines-card mt-50">
 
               <header className="card-head">
-                <h1 id="guidelines-title" className="card-title">Welcome to CodeSprint 3.0</h1>
+                <h1 id="guidelines-title" className="card-title">Welcome to Code Verse</h1>
                 <div className="card-subtitle">
-                  Organized by the Technocrats Developers Club
+                  Organized by the Team Code Verse
                   <br />
-                  In collaboration with Sheryians Coding School
+                  In collaboration with Cybrom Technologies Pvt. Ltd.
                 </div>
               </header>
 
@@ -322,25 +302,22 @@ const App = () => {
                   </p>
 
                   <p className="wish" style={{ textAlign: "center", marginTop: 18 }}>
-                    <strong>All the best for CodeSprint 3.0!</strong>
+                    <strong>All the best for Code Verse!</strong>
                     <br />
                     <small>Code. Compete. Conquer. 🚀</small>
                   </p>
 
                   <div className="signature" style={{ marginTop: 14 }}>
                     <div>Regards,</div>
-                    <div>Team CodeSprint 3.0</div>
-                    <div>Technocrats Developers Club</div>
+                    <div>Team Code Verse</div>
                   </div>
                 </div>
               </section>
-
               <div className="card-actions">
                 <button className="btn-cancel" onClick={() => setShowGuidelines(false)}>Cancel</button>
-
                 <button
                   ref={goBtnRef}
-                  className={`btn-go ${allChecked ? "" : "disabled"} cursor-pointer`}
+                  className={`btn-go ${allChecked ? "" : "disabled"} ${!allChecked ? "cursor-not-allowed" : "cursor-pointer"}`}
                   onClick={handleGoToContestClick}
                   aria-disabled={!allChecked}
                   title={allChecked ? "Proceed to login" : "Please accept all terms"}

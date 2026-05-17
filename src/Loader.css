@@ -1,0 +1,85 @@
+.fire-loader-container {
+  position: fixed;
+  inset: 0;
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+/* The pre-rendered fire text image — covers the full visible area */
+.fire-text-img {
+  position: relative;
+  z-index: 5;
+  width: clamp(320px, 90vw, 1100px);
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  display: block;
+}
+
+/* Dark overlay that sits on top and progressively gets clipped away
+   revealing the fire letters one by one left-to-right */
+.fire-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: #000;
+  /* Initial state: full dark covering everything */
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+}
+
+/* ——— CSS Spark Particles ——— */
+.sparks-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 15;
+}
+
+.spark {
+  position: absolute;
+  bottom: 38%;
+  width: 4px;
+  height: 4px;
+  background-color: #ff8c00;
+  border-radius: 50%;
+  box-shadow: 0 0 10px 2px #ff4400, 0 0 4px 1px #ffcc00;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+@keyframes spark-rise {
+  0%   { opacity: 0;   transform: translateY(0)      scale(0.5); }
+  15%  { opacity: 1;   transform: translateY(-60px)  scale(1.1); }
+  100% { opacity: 0;   transform: translateY(-420px) translateX(calc(-180px + 360px * var(--x))) scale(0); }
+}
+
+/* 20 unique spark positions */
+.spark-0  { left: 5%;  animation: spark-rise 2.0s infinite ease-in; animation-delay: 0.1s;  --x: 0.2; }
+.spark-1  { left: 14%; animation: spark-rise 2.6s infinite ease-in; animation-delay: 0.5s;  --x: 0.8; }
+.spark-2  { left: 23%; animation: spark-rise 1.8s infinite ease-in; animation-delay: 0.3s;  --x: 0.1; }
+.spark-3  { left: 32%; animation: spark-rise 2.3s infinite ease-in; animation-delay: 0.7s;  --x: 0.9; }
+.spark-4  { left: 41%; animation: spark-rise 2.0s infinite ease-in; animation-delay: 0.4s;  --x: 0.5; }
+.spark-5  { left: 50%; animation: spark-rise 1.9s infinite ease-in; animation-delay: 0.9s;  --x: 0.3; }
+.spark-6  { left: 59%; animation: spark-rise 2.4s infinite ease-in; animation-delay: 0.2s;  --x: 0.7; }
+.spark-7  { left: 68%; animation: spark-rise 2.1s infinite ease-in; animation-delay: 0.6s;  --x: 0.4; }
+.spark-8  { left: 77%; animation: spark-rise 2.3s infinite ease-in; animation-delay: 0.1s;  --x: 0.6; }
+.spark-9  { left: 86%; animation: spark-rise 1.7s infinite ease-in; animation-delay: 0.8s;  --x: 0.8; }
+.spark-10 { left: 95%; animation: spark-rise 2.5s infinite ease-in; animation-delay: 0.3s;  --x: 0.2; }
+.spark-11 { left: 10%; animation: spark-rise 2.1s infinite ease-in; animation-delay: 0.4s;  --x: 0.7; }
+.spark-12 { left: 19%; animation: spark-rise 1.9s infinite ease-in; animation-delay: 0.6s;  --x: 0.3; }
+.spark-13 { left: 28%; animation: spark-rise 2.4s infinite ease-in; animation-delay: 0.2s;  --x: 0.6; }
+.spark-14 { left: 37%; animation: spark-rise 2.0s infinite ease-in; animation-delay: 0.9s;  --x: 0.4; }
+.spark-15 { left: 46%; animation: spark-rise 2.2s infinite ease-in; animation-delay: 0.5s;  --x: 0.1; }
+.spark-16 { left: 55%; animation: spark-rise 1.8s infinite ease-in; animation-delay: 0.7s;  --x: 0.9; }
+.spark-17 { left: 64%; animation: spark-rise 2.5s infinite ease-in; animation-delay: 0.3s;  --x: 0.5; }
+.spark-18 { left: 73%; animation: spark-rise 2.3s infinite ease-in; animation-delay: 0.1s;  --x: 0.8; }
+.spark-19 { left: 82%; animation: spark-rise 1.7s infinite ease-in; animation-delay: 0.4s;  --x: 0.2; }
