@@ -6,7 +6,7 @@ import Loader from "./Loader";
 const bgImgPath = "/BG.png";
 
 const CONTEST_URL =
-  "https://www.hackerearth.com/challenges/college/code-sprint-30/";
+  "https://www.hackerearth.com/challenges/college/codeverse-test/";
 
 const App = () => {
   const [bgLoaded, setBgLoaded] = useState(false);
